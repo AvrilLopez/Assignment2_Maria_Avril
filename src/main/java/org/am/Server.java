@@ -1,6 +1,8 @@
 package org.am;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -12,7 +14,7 @@ public class Server {
     protected int numClients                = 0;
 
     public static int SERVER_PORT = 16789;
-    public static int MAX_CLIENTS = 25;
+    public static int MAX_CLIENTS = 5;
 
     public Server() {
         try {
@@ -28,9 +30,17 @@ public class Server {
                 threads[numClients] = new ClientConnectionHandler(clientSocket);
                 threads[numClients].start();
                 numClients++;
+
             }
         } catch (IOException e) {
             System.err.println("IOException while creating server connection");
         }
     }
+
+
+    public static void main(String[] args) {
+        Server server = new Server();
+    }
+
+
 }
