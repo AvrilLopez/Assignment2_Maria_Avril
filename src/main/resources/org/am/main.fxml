@@ -1,46 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.*?>
+
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.am.Controller"
             prefHeight="500.0" prefWidth="500.0">
     <top>
-        <!--<MenuBar fx:id="MenuBar">
-            <Menu>
-                <MenuItem text="DownLoad" onAction="#downloadClicked"/>
-                <MenuItem text="Upload" onAction="#uploadClicked"/>
-            </Menu>
-
-        </MenuBar>-->
-        <HBox>
-            <Button text="DownLoad" onAction="#downloadClicked"/>
-            <Button text="Upload" onAction="#uploadClicked"/>
+        <HBox fx:id="MenuBar">
+            <Button text="DownLoad" onAction="#uploadRequest"></Button>
+            <Button text="Upload" onAction="#downloadRequest"></Button>
+            <Button text="Delete" onAction="#deleteRequest"></Button>
         </HBox>
-
     </top>
 
     <left>
         <SplitPane>
             <items>
+                <TreeView fx:id="treeViewLeft" onMouseClicked="#leftClicked" minWidth="250.0">
+                    <TreeItem value="Server Dir" fx:id="serverDirectory" expanded=""></TreeItem>
+                </TreeView>
 
-<!--                <TableView fx:id="tableViewRight" minWidth="250.0">-->
-                    <ListView fx:id="listViewLeft" minWidth="250.0"/>
-                    <ListView fx:id="listViewRight"  minWidth="250.0"/>
-
-
-
-
-
-
-<!--                </TableView>-->
-                <!--<TableView fx:id="tableViewLeft" minWidth="250.0">
-                    <columns>
-                        <TableColumn> </TableColumn>
-                    </columns>
-                </TableView>-->
+            </items>
+            <items>
+                <TreeView fx:id="treeViewRight" onMouseClicked="#rightClicked" minWidth="250.0">
+                    <TreeItem value="Local Dir" fx:id="localDirectory" expanded="expanded"></TreeItem>
+                </TreeView>
             </items>
         </SplitPane>
     </left>

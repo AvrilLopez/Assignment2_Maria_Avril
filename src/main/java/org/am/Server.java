@@ -2,7 +2,6 @@ package org.am;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -12,11 +11,13 @@ public class Server {
     protected ServerSocket serverSocket     = null;
     protected ClientConnectionHandler[] threads    = null;
     protected int numClients                = 0;
+    private File serverDirectory            = null;
 
     public static int SERVER_PORT = 16789;
-    public static int MAX_CLIENTS = 5;
+    public static int MAX_CLIENTS = 100;
 
-    public Server() {
+    public Server(File serverDirectory) {
+        this.serverDirectory = serverDirectory;
         try {
             serverSocket = new ServerSocket(SERVER_PORT);
             System.out.println("---------------------------");
@@ -26,21 +27,18 @@ public class Server {
             threads = new ClientConnectionHandler[MAX_CLIENTS];
             while(true) {
                 clientSocket = serverSocket.accept();
-                System.out.println("Client #"+(numClients+1)+" connected.");
+                System.out.println("Client connected.");
                 threads[numClients] = new ClientConnectionHandler(clientSocket);
                 threads[numClients].start();
                 numClients++;
-
             }
         } catch (IOException e) {
+            e.printStackTrace();
             System.err.println("IOException while creating server connection");
         }
     }
 
-
     public static void main(String[] args) {
-        Server server = new Server();
+        Server server = new Server(new File("C:\\Users\\Avril\\Desktop\\Server"));
     }
-
-
 }
