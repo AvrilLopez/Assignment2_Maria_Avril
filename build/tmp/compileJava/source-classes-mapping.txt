@@ -1,10 +1,10 @@
 org/am/Main.java
  org.am.Main
-org/am/Server.java
- org.am.Server
+org/am/Controller.java
+ org.am.Controller
 org/am/Client.java
  org.am.Client
 org/am/ClientConnectionHandler.java
  org.am.ClientConnectionHandler
-org/am/Controller.java
- org.am.Controller
+org/am/Server.java
+ org.am.Server

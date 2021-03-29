@@ -28,18 +28,17 @@ public class ClientConnectionHandler extends Thread{
 
         String line;
         try{
-            if (requestInput.ready()){
-                line = requestInput.readLine();
-                handleRequest(line);
-            }
+            line = requestInput.readLine();
+            handleRequest(line);
         } catch(IOException e) {
-            e.printStackTrace();
+            System.err.println("Error reading from client output stream (Server input)");
         } finally {
             try {
                 requestInput.close();
                 clientSocket.close();
+                System.out.println("Client Disconnected\r\n");
             } catch(IOException e) {
-                e.printStackTrace();
+                System.err.println("Error closing the client socket or input stream");
             }
         }
 
@@ -68,7 +67,7 @@ public class ClientConnectionHandler extends Thread{
             try {
                 sendResponse(responseCode, "-/-", null, "-/-");
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("Error sending Unrecognized Request Response");
             }
 
             return false;
@@ -83,7 +82,7 @@ public class ClientConnectionHandler extends Thread{
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error reading DIR request from the Client.");
         }
 
         System.out.println(request);
@@ -104,7 +103,7 @@ public class ClientConnectionHandler extends Thread{
         try {
             sendResponse(responseCode, serverDirectory.getName(), content, lines.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("400: Error while sending DIR response.");
         }
     }
 
@@ -120,38 +119,109 @@ public class ClientConnectionHandler extends Thread{
             }
 
             request += parameters;
-            System.out.println(request);
 
         } catch(IOException e) {
-            e.printStackTrace();
+            System.err.println("Error reading UPLOAD request from the Client.");
         }
+
+        System.out.println(request);
+        sendUploadResponse();
+    }
+
+    private void sendUploadResponse(){
+
     }
 
     private void handleDownload(String line) {
-        String request = "DOWNLOAD";
+        String request = line;
+        String[] temp = line.split(" ");
+        String filename = temp[1];
         try{
-            for (int i = 0; i < 5; i++){
-                request += "\r\n" + requestInput.readLine();
+            while (requestInput.ready() && null != (line = requestInput.readLine())){
+                request += "\r\n" + line;
             }
 
-            System.out.println(request);
-
         } catch(IOException e) {
-            e.printStackTrace();
+            System.err.println("Error reading DOWNLOAD request from the Client.");
         }
+
+        System.out.println(request);
+        sendDownloadResponse(filename);
+    }
+
+    private void sendDownloadResponse(String filename){
+        String responseCode = "200 Ok: DOWNLOAD";
+
+        File downloadFile = null;
+        File[] files = serverDirectory.listFiles();
+        for (File file : files) {
+            if (file.getName().equals(filename)) {
+                downloadFile = file;
+            }
+        }
+
+
+        String content = "";
+
+        try {
+            String currentLine = "";
+            BufferedReader br = new BufferedReader(new FileReader(downloadFile));
+            Integer lines = 0;
+            while (null != (currentLine = br.readLine())) {
+                content += currentLine +"\r\n";
+                lines++;
+
+            }
+
+            try {
+                sendResponse(responseCode, filename, content, lines.toString());
+            } catch (IOException e) {
+                System.err.println("400: Error while sending DOWNLOAD response.");
+            }
+        } catch (IOException e) {
+            System.err.println("404: Error File for download not found in the server.");
+        }
+
+
     }
 
     private void handleDelete(String line) {
-        String request = "DELETE";
+        String request = line;
+        String[] temp = line.split(" ");
+        String filename = temp[1];
         try{
-            for (int i = 0; i < 5; i++){
-                request += "\r\n" + requestInput.readLine();
+            while (requestInput.ready() && null != (line = requestInput.readLine())){
+                request += line + "\r\n";
             }
 
-            System.out.println(request);
-
         } catch(IOException e) {
-            e.printStackTrace();
+            System.err.println("Error reading DELETE request from the Client.");
+        }
+
+        System.out.println(request);
+        sendDeleteResponse(filename);
+    }
+
+    private void sendDeleteResponse(String filename){
+        String responseCode = "200 Ok: DELETE";
+
+        File deleteFile = null;
+        File[] files = serverDirectory.listFiles();
+        for (File file : files) {
+            if (file.getName().equals(filename)) {
+                deleteFile = file;
+            }
+        }
+
+        if (null == deleteFile){
+            System.err.println("Error, file for removal could not be found in the server.");
+        } else {
+            deleteFile.delete();
+            try {
+                sendResponse(responseCode, filename, "-/-", "0");
+            } catch (IOException e) {
+                System.err.println("400: Error while sending DELETE response.");
+            }
         }
     }
 

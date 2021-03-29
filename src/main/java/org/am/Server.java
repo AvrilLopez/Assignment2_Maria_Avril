@@ -5,13 +5,20 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/*
+ *  Server class
+ *
+ *  for server fet up and, listening for connections and
+ *  thread setup.
+ *
+ */
 public class Server {
 
     protected Socket clientSocket           = null;
     protected ServerSocket serverSocket     = null;
     protected ClientConnectionHandler[] threads    = null;
     protected int numClients                = 0;
-    private File serverDirectory            = null;
+    protected File serverDirectory;
 
     public static int SERVER_PORT = 16789;
     public static int MAX_CLIENTS = 100;

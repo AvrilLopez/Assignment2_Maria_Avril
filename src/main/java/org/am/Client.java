@@ -1,16 +1,9 @@
 package org.am;
 
 /*
- * Client is main class for the client.
- * The ServerRunner can take in parameters from the user on run
- * The typical expected parameters are <hostname> <folderPath>
- * <p>
- * Alternatively you can also provide only one of these parameters if you wish
- * the runner has code to handle only one input.
- * If no parameters are provided the Client will run with default values
+ *  Client class
  *
- * @param hostname @default localhost
- * @param folderPath @default ./server-files/ where '.' is a relative path
+ *  @param localDir
  */
 
 import java.awt.*;
@@ -85,84 +78,121 @@ public class Client{
         return response;
     }
 
-//    // DOWNLOAD
-//    public String downloadRequest(String filename) {
-//        String request = "DOWNLOAD " + filename + "\r\n" +
-//                "User: " + this.username + "\r\n" +
-//                "Host: " + this.SERVER_ADDRESS + " " + this.SERVER_PORT + "\r\n" +
-//                "Content:" + "\r\n" +
-//                "-/-";
-//        networkOut.println(request);
-//        networkOut.flush();
-//
-//        String response = null;
-//        // read response
-//        try {
-//            response = readResponse();
-//            socket.close();
-//        } catch (IOException e){
-//            System.err.println("Error reading response from the Server Socket");
-//        }
-//        return response;
-//    }
-//
-//    // UPLOAD
-//    public String uploadRequest(File file) {
-//        String request = "UPLOAD " + file.getName() + "\r\n" +
-//                "User: " + this.username + "\r\n" +
-//                "Host: " + this.SERVER_ADDRESS + " " + this.SERVER_PORT + "\r\n" +
-//                "Content:" + "\r\n";
-//
-//        // iterate through file and add each line to the request content
-//        try {
-//            BufferedReader reader = new BufferedReader(new FileReader(file));
-//            String line;
-//            while((line = reader.readLine()) != null) {
-//                request += line + "\r\n";
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        request += "-/-";
-//
-//        networkOut.println(request);
-//        networkOut.flush();
-//
-//        String response = null;
-//        // read response
-//        try {
-//            response = readResponse();
-//            socket.close();
-//        } catch (IOException e){
-//            System.err.println("Error reading response from the Server Socket");
-//        }
-//        return response;
-//    }
-//
-//    // DELETE
-//    public String deleteRequest(String filename) {
-//        String request = "DELETE " + filename + "\r\n" +
-//                "User: " + this.username + "\r\n" +
-//                "Host: " + this.SERVER_ADDRESS + " " + this.SERVER_PORT + "\r\n" +
-//                "Content:" + "\r\n" +
-//                "-/-";
-//
-//        networkOut.println(request);
-//        networkOut.flush();
-//
-//        String response = null;
-//        // read response
-//        try {
-//            response = readResponse();
-//            socket.close();
-//        } catch (IOException e){
-//            System.err.println("Error reading response from the Server Socket");
-//        }
-//        return response;
-//    }
+    // DOWNLOAD
+    public String downloadRequest(String filename) {
+        String request = "DOWNLOAD " + filename + "\r\n" +
+                "User: " + this.username + "\r\n" +
+                "Host: " + this.SERVER_ADDRESS + " " + this.SERVER_PORT + "\r\n" +
+                "Content:" + "\r\n" +
+                "-/-";
+        networkOut.println(request);
+        networkOut.flush();
+
+        String response = null;
+        // read response
+        try {
+            response = readResponse();
+            System.out.println(response);
+            socket.close();
+        } catch (IOException e){
+            System.err.println("Error reading response from the Server Socket");
+        }
+        return response;
+    }
+
+    // UPLOAD
+    public String uploadRequest(File file) {
+        String request = "UPLOAD " + file.getName() + "\r\n" +
+                "User: " + this.username + "\r\n" +
+                "Host: " + this.SERVER_ADDRESS + " " + this.SERVER_PORT + "\r\n" +
+                "Content:" + "\r\n";
+
+        // iterate through file and add each line to the request content
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String line;
+            while((line = reader.readLine()) != null) {
+                request += line + "\r\n";
+            }
+        } catch (Exception e) {
+            System.err.println("404 File for UPLOAD nor Found.");
+        }
+
+        request += "-/-";
+
+        networkOut.println(request);
+        networkOut.flush();
+
+        String response = null;
+        // read response
+        try {
+            response = readResponse();
+            socket.close();
+        } catch (IOException e){
+            System.err.println("Error reading response from the Server Socket");
+        }
+        return response;
+    }
+
+    // DELETE
+    public String deleteRequest(String filename, Boolean local) {
+        String request = "DELETE " + filename + "\r\n" +
+                "User: " + this.username + "\r\n" +
+                "Host: " + this.SERVER_ADDRESS + " " + this.SERVER_PORT + "\r\n" +
+                "Content:" + "\r\n" +
+                "-/-";
+
+        networkOut.println(request);
+        networkOut.flush();
+
+        String response = null;
+        if (!local) {
+            networkOut.println(request);
+            networkOut.flush();
+            // read response
+            try {
+                response = readResponse();
+                socket.close();
+            } catch (IOException e) {
+                System.err.println("Error reading response from the Server Socket");
+            }
+        } else {
+            File deleteFile = null;
+            File[] files = localDir.listFiles();
+            for (File file: files){
+                if (file.getName().equals(filename)){
+                    deleteFile = file;
+                }
+            }
+            if(null != deleteFile) {
+                deleteFile.delete();
+                response = "File Locally Deleted Successfully";
+            } else {
+                System.err.println("404 File for deletion not found");
+            }
+        }
+        return response;
+    }
 
     public String readResponse() throws IOException {
+//        String line = networkIn.readLine();
+//        String[] request = line.split(" ");
+//
+//        String response = line + "\r\n";
+//        for (int i = 0; i < 4; i++){
+//            line = networkIn.readLine();
+//            response += line + "\r\n";
+//        }
+//        String[] contentLines = line.split(" ");
+//
+//        String content = "";
+//        if (request[2].equals("DOWNLOAD")){
+//            for (int i = 0; i < Integer.parseInt(contentLines[2]); i++){
+//                content += networkIn.readLine() + "\r\n";
+//            }
+//        } else {
+//            content += "-/-";
+//        }
         String line;
         String response = "";
         while (null != (line = networkIn.readLine())){

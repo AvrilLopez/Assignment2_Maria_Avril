@@ -18,6 +18,8 @@ public class Controller {
 
     private Stage primaryStage;
 
+    private File currentFileLocal;
+    private String currentFileRemote;
     private String currentFile;
 
     private Boolean local;
@@ -54,24 +56,29 @@ public class Controller {
     }
 
     public void populateLeftTreeView(){
-        if (null != dirResponse) {
-            TreeItem<String> root = new TreeItem<>();
-            root.setExpanded(true);
-            System.out.println(dirResponse);
-            root.setValue("Server");
+        try {
+            if (null != dirResponse) {
+                TreeItem<String> root = new TreeItem<>();
+                root.setExpanded(true);
+                root.setValue("Server");
 
-            String[] files = dirResponse.split("\r\n");
-            String[] length = files[4].split(" ");
-            Integer responseLength = Integer.parseInt(length[1]);
+                String[] files = dirResponse.split("\r\n");
+                String[] length = files[4].split(" ");
+                Integer responseLength = Integer.parseInt(length[1]);
 
-            Integer i = 0;
-            for (String file : files) {
-                if (i > 5 && i < 6 + responseLength) {
-                    createItem(file, root);
+                Integer i = 0;
+                for (String file : files) {
+                    if (i > 5 && i < 6 + responseLength) {
+                        createItem(file, root);
+                    }
+                    i++;
                 }
-                i++;
+                treeViewLeft.setRoot(root);
             }
-            treeViewLeft.setRoot(root);
+        } catch (IndexOutOfBoundsException e){
+            System.err.println("Error in populationg Left TreeView - Index out of Bounds");
+        }catch (NullPointerException e){
+            System.err.println("Error in populationg Left TreeView - Null Pointer Exception");
         }
     }
 
@@ -83,17 +90,17 @@ public class Controller {
     }
 
     public void rightClicked(MouseEvent mouseEvent) {
-        if (mouseEvent.getTarget().getClass().getName().equals("javafx.scene.Group")){
-
-        } else if (mouseEvent.getTarget().getClass().getName().equals("com.sun.javafx.scene.control.LabeledText")) {
+        if (mouseEvent.getTarget().getClass().getName().equals("com.sun.javafx.scene.control.LabeledText")) {
             String[] filename = mouseEvent.getTarget().toString().split("\"");
-            this.currentFile = filename[1];
-            this.local = true;
+            setCurrentFileLocal(filename[1]);
+            currentFile = filename[1];
+            local = true;
             dirRequest();
-        } else {
+        } else if (mouseEvent.getTarget().getClass().getName().equals("javafx.scene.control.skin.TreeViewSkin$1")){
             String[] filename = mouseEvent.getTarget().toString().split("'");
-            this.currentFile = filename[1];
-            this.local = true;
+            setCurrentFileLocal(filename[1]);
+            currentFile = filename[1];
+            local = true;
             dirRequest();
         }
 
@@ -101,17 +108,17 @@ public class Controller {
     }
 
     public void leftClicked(MouseEvent mouseEvent) {
-        if (mouseEvent.getTarget().getClass().getName().equals("javafx.scene.Group")){
-
-        } else if (mouseEvent.getTarget().getClass().getName().equals("com.sun.javafx.scene.control.LabeledText")) {
+        if (mouseEvent.getTarget().getClass().getName().equals("com.sun.javafx.scene.control.LabeledText")) {
             String[] filename = mouseEvent.getTarget().toString().split("\"");
-            this.currentFile = filename[1];
-            this.local = false;
+            currentFileRemote = filename[1];
+            currentFile = filename[1];
+            local = false;
             dirRequest();
-        } else {
+        } else if (mouseEvent.getTarget().getClass().getName().equals("javafx.scene.control.skin.TreeViewSkin$1")){
             String[] filename = mouseEvent.getTarget().toString().split("'");
-            this.currentFile = filename[1];
-            this.local = false;
+            currentFileRemote = filename[1];
+            currentFile = filename[1];
+            local = false;
             dirRequest();
         }
 
@@ -130,31 +137,53 @@ public class Controller {
     @FXML
     public void dirRequest(){
         Client client = new Client(clientDir);
-        this.dirResponse = client.dirRequest();
-        parseDirResponse();
-        populateLeftTreeView();
-        populateRightTreeView();
+        String tempDirResponse = client.dirRequest();
+
+        if ( null != tempDirResponse && !tempDirResponse.equals(dirResponse)) {
+            dirResponse = tempDirResponse;
+            parseDirResponse();
+            populateLeftTreeView();
+            populateRightTreeView();
+        }
     }
     @FXML
     public void uploadRequest(){
         Client client = new Client(clientDir);
-        //this.response = client.uploadRequest(currentFile);
+        response = client.uploadRequest(currentFileLocal);
+        dirRequest();
     }
     @FXML
     public void downloadRequest(){
         Client client = new Client(clientDir);
-//        this.response = client.downloadRequest(currentFile);
+        response = client.downloadRequest(currentFileRemote);
+        dirRequest();
     }
     @FXML
     public void deleteRequest(){
         Client client = new Client(clientDir);
-//        this.response = client.deleteRequest(currentFile);
-    }
-    @FXML
-    public void exit() {
-        primaryStage.close();
+        response = client.deleteRequest(currentFile, local);
+        dirRequest();
     }
 
+    private void setCurrentFileLocal(String filename){
+        try {
+            File uploadFile = null;
+            File[] files = clientDir.listFiles();
+            for (File file : files) {
+                if (file.getName().equals(filename)) {
+                    uploadFile = file;
+                }
+            }
+
+            if (null == uploadFile){
+                System.err.println("Error, file could not be found");
+            } else {
+                currentFileLocal = uploadFile;
+            }
+        } catch (Exception e){
+            System.err.println("Error, file could not be found");
+        }
+    }
 
 
 }
