@@ -11,7 +11,7 @@
             fx:controller="org.am.Controller"
             prefHeight="500.0" prefWidth="500.0">
     <top>
-        <HBox fx:id="MenuBar">
+        <HBox fx:id="MenuBar" minHeight="45">
             <GridPane hgap="10" vgap="10">
                 <Button text="DownLoad" onAction="#downloadRequest" GridPane.columnIndex="1" GridPane.rowIndex="1"></Button>
                 <Button text="Upload" onAction="#uploadRequest" GridPane.columnIndex="2" GridPane.rowIndex="1"></Button>

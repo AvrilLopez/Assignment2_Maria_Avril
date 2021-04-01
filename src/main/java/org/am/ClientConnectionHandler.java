@@ -3,6 +3,7 @@ package org.am;
 import java.io.*;
 import java.net.Socket;
 import java.util.Date;
+import java.util.Scanner;
 
 public class ClientConnectionHandler extends Thread{
     protected Socket clientSocket;
@@ -77,7 +78,7 @@ public class ClientConnectionHandler extends Thread{
     private void handleDir(String line) {
         String request = line;
         try{
-            while(null != (line = requestInput.readLine()) && !line.equals("-/-")) {
+            while(requestInput.ready() && null != (line = requestInput.readLine())) {
                 request += "\r\n" + line;
             }
 
@@ -108,34 +109,59 @@ public class ClientConnectionHandler extends Thread{
     }
 
     private void handleUpload(String line) {
-        String request = "UPLOAD";
-        try{
-            for (int i = 0; i < 5; i++){
-                request += "\r\n" + requestInput.readLine();
-            }
-            String parameters = "";
-            while(!requestInput.readLine().equalsIgnoreCase("-/-")) {
-                parameters += "\r\n" + requestInput.readLine();
-            }
+        String request = line;
+        String[] temp = line.split("UPLOAD");
 
-            request += parameters;
+        // The following line of code to take the extra spacing away was taken form stack overflow
+        String filename = temp[1].trim().replaceAll(" +", " ");
+
+        try{
+            while(requestInput.ready() && null != (line = requestInput.readLine())) {
+                request += "\r\n" + line;
+            }
 
         } catch(IOException e) {
             System.err.println("Error reading UPLOAD request from the Client.");
         }
 
         System.out.println(request);
-        sendUploadResponse();
+        sendUploadResponse(filename, request);
     }
 
-    private void sendUploadResponse(){
+    private void sendUploadResponse(String filename, String request){
+        String[] requestAsList = request.split("\r\n");
+        int i = 4;
+        try {
+            String path = serverDirectory.getPath() + "\\" + filename;
+            File newFile = new File(path);
+            newFile.createNewFile();
+            PrintWriter fileOutput = new PrintWriter(path);
+            while(!requestAsList[i].equals("-/-")){
+                fileOutput.println(requestAsList[i]);
+                i++;
+            }
+            fileOutput.close();
 
+            String responseCode = "200 Ok: UPLOAD";
+
+            try {
+                sendResponse(responseCode, filename, "-/-", "0");
+            } catch (IOException e) {
+                System.err.println("400: Error while sending UPLOAD response.");
+            }
+
+        } catch (IOException e){
+            System.err.println("Error, file for printing into not found in server");
+        }
     }
 
     private void handleDownload(String line) {
         String request = line;
-        String[] temp = line.split(" ");
-        String filename = temp[1];
+        String[] temp = line.split("DOWNLOAD");
+
+        // The following line of code to take the extra spacing away was taken form stack overflow
+        String filename = temp[1].trim().replaceAll(" +", " ");
+
         try{
             while (requestInput.ready() && null != (line = requestInput.readLine())){
                 request += "\r\n" + line;
@@ -164,20 +190,29 @@ public class ClientConnectionHandler extends Thread{
         String content = "";
 
         try {
-            String currentLine = "";
-            BufferedReader br = new BufferedReader(new FileReader(downloadFile));
-            Integer lines = 0;
-            while (null != (currentLine = br.readLine())) {
-                content += currentLine +"\r\n";
-                lines++;
 
+            if (null != downloadFile){
+                String currentLine = "";
+                Scanner scanner = new Scanner(downloadFile);
+                Integer lines = 0;
+                while (scanner.hasNext() && null != (currentLine = scanner.nextLine())) {
+                    content += currentLine +"\r\n";
+                    lines++;
+
+                }
+
+                System.out.println(content);
+                scanner.close();
+
+                try {
+                    sendResponse(responseCode, filename, content, lines.toString());
+                } catch (IOException e) {
+                    System.err.println("400: Error while sending DOWNLOAD response.");
+                }
+            } else {
+                System.err.println("Null pointer exception, file for download is null.");
             }
 
-            try {
-                sendResponse(responseCode, filename, content, lines.toString());
-            } catch (IOException e) {
-                System.err.println("400: Error while sending DOWNLOAD response.");
-            }
         } catch (IOException e) {
             System.err.println("404: Error File for download not found in the server.");
         }
@@ -187,7 +222,7 @@ public class ClientConnectionHandler extends Thread{
 
     private void handleDelete(String line) {
         String request = line;
-        String[] temp = line.split(" ");
+        String[] temp = line.split("DELETE");
         String filename = temp[1];
         try{
             while (requestInput.ready() && null != (line = requestInput.readLine())){

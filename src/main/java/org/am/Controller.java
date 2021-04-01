@@ -7,6 +7,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 public class Controller {
     @FXML
@@ -143,8 +145,8 @@ public class Controller {
             dirResponse = tempDirResponse;
             parseDirResponse();
             populateLeftTreeView();
-            populateRightTreeView();
         }
+        populateRightTreeView();
     }
     @FXML
     public void uploadRequest(){
@@ -156,6 +158,34 @@ public class Controller {
     public void downloadRequest(){
         Client client = new Client(clientDir);
         response = client.downloadRequest(currentFileRemote);
+
+        // Parsing the response
+        String[] responseContent = response.split("\r\n");
+        String[] length = responseContent[4].split(" ");
+        Integer responseLength = Integer.parseInt(length[1]);
+        String[] file = responseContent[3].split(" ");
+        String filename = file[1];
+
+        try {
+            String path = clientDir.getPath() + "\\" + filename;
+            File newFile = new File(path);
+            newFile.createNewFile();
+            PrintWriter fileOutput = new PrintWriter(path);
+
+            Integer i = 0;
+            for (String line : responseContent) {
+                if (i > 5 && i < 6 + responseLength) {
+                    fileOutput.println(responseContent[i]);
+                }
+                i++;
+            }
+
+            fileOutput.close();
+
+        } catch (IOException e){
+            System.err.println("Error copying the file into the local directory");
+        }
+
         dirRequest();
     }
     @FXML
