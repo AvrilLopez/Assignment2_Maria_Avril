@@ -46,6 +46,6 @@ public class Server {
     }
 
     public static void main(String[] args) {
-        Server server = new Server(new File("C:\\Users\\Avril\\Desktop\\Server"));
+        Server server = new Server(new File("./src/main/resources/ServerDirectory"));
     }
 }

@@ -163,8 +163,13 @@ public class Controller {
         String[] responseContent = response.split("\r\n");
         String[] length = responseContent[4].split(" ");
         Integer responseLength = Integer.parseInt(length[1]);
-        String[] file = responseContent[3].split(" ");
+        String[] file = responseContent[3].split("File: ");
         String filename = file[1];
+
+        if (isInDir(filename,clientDir)){
+            String[] temp1 = filename.split("\\.");
+            filename = temp1[0] + "(" + 1 + ")." + temp1[1];
+        }
 
         try {
             String path = clientDir.getPath() + "\\" + filename;
@@ -213,6 +218,16 @@ public class Controller {
         } catch (Exception e){
             System.err.println("Error, file could not be found");
         }
+    }
+
+    private boolean isInDir(String filename, File directory){
+        File[] files = directory.listFiles();
+        for (File file : files) {
+            if (file.getName().equals(filename)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

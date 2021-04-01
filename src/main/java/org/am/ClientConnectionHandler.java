@@ -9,7 +9,7 @@ public class ClientConnectionHandler extends Thread{
     protected Socket clientSocket;
     protected PrintWriter responseOutput = null;
     protected BufferedReader requestInput = null;
-    private File serverDirectory = new File("C:\\Users\\Avril\\Desktop\\Server");
+    private File serverDirectory = new File("./src/main/resources/ServerDirectory");
 
     public ClientConnectionHandler(Socket socket) {
         super();
@@ -132,6 +132,11 @@ public class ClientConnectionHandler extends Thread{
         String[] requestAsList = request.split("\r\n");
         int i = 4;
         try {
+            if (isInDir(filename,serverDirectory)){
+                String[] temp1 = filename.split("\\.");
+                filename = temp1[0] + "(" + 1 + ")." + temp1[1];
+            }
+
             String path = serverDirectory.getPath() + "\\" + filename;
             File newFile = new File(path);
             newFile.createNewFile();
@@ -223,7 +228,10 @@ public class ClientConnectionHandler extends Thread{
     private void handleDelete(String line) {
         String request = line;
         String[] temp = line.split("DELETE");
-        String filename = temp[1];
+
+        // The following line of code to take the extra spacing away was taken form stack overflow
+        String filename = temp[1].trim().replaceAll(" +", " ");
+
         try{
             while (requestInput.ready() && null != (line = requestInput.readLine())){
                 request += line + "\r\n";
@@ -270,5 +278,15 @@ public class ClientConnectionHandler extends Thread{
         responseOutput.print("\r\nConnection: Close\r\n\r\n");
         responseOutput.flush();
 
+    }
+
+    private boolean isInDir(String filename, File directory){
+        File[] files = directory.listFiles();
+        for (File file : files) {
+            if (file.getName().equals(filename)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
