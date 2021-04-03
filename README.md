@@ -17,23 +17,23 @@ upload files to the server, download files from the server, delete files from th
 local and server files.
 
 
-<ins>Screenshot</ins>
+## Screenshot
 
 ![Alt text]( "Screenshot")
 
-<ins>Framework used / built with</ins>
+## Framework used / built with
 
 We used IntelliJ to layout, organize and code the program.
 
 And we used Gradle to organise the execution of files.
 
 
-<ins>Installation / How to use?</ins>
+## Installation / How to use?
 
 For easy running, using any terminal, starting from the repository folder, run gradle startServer to dtart the Server.
 Then, from another terminal, navigate to the repository folder and run gradle run.
 
-<ins>Credit</ins>
+## Credit
 
 For some of the classes in the program, mostly Server.java and, some functions and code structure was taken from the modules 6 and 7 course examples, to be specific, from the ChatServer example.
 
