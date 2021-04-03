@@ -22,7 +22,7 @@ public class Controller {
     private TextArea fileTextArea;
 
     public File clientDir;
-
+    private String username;
     private Stage primaryStage;
 
     private File currentFileLocal;
@@ -38,12 +38,11 @@ public class Controller {
     private Utils utils;
 
     @FXML
-    public void initialize(File localDir) {
-
+    public void initialize(File localDir, String username) {
+        this.username = username;
         this.clientDir = localDir;
         this.currentFile = null;
         this.local = null;
-//        utils = new utils();
 
         dirRequest();
     }
@@ -179,7 +178,7 @@ public class Controller {
      */
     @FXML
     public void dirRequest(){
-        Client client = new Client(clientDir);
+        Client client = new Client(clientDir, username);
         String tempDirResponse = client.dirRequest();
 
         if ( null != tempDirResponse && !tempDirResponse.equals(dirResponse)) {
@@ -198,7 +197,7 @@ public class Controller {
      */
     @FXML
     public void uploadRequest(){
-        Client client = new Client(clientDir);
+        Client client = new Client(clientDir, username);
         response = client.uploadRequest(currentFileLocal);
         dirRequest();
     }
@@ -212,7 +211,7 @@ public class Controller {
      */
     @FXML
     public void downloadRequest(){
-        Client client = new Client(clientDir);
+        Client client = new Client(clientDir, username);
         response = client.downloadRequest(currentFileRemote);
 
         // Parsing the response
@@ -245,7 +244,7 @@ public class Controller {
      */
     @FXML
     public void deleteRequest(){
-        Client client = new Client(clientDir);
+        Client client = new Client(clientDir, username);
         response = client.deleteRequest(currentFile, local);
         dirRequest();
     }
@@ -309,7 +308,7 @@ public class Controller {
         textArea.clear();
         if (!local) {
             //textArea.appendText("remote\n");
-            Client client = new Client(clientDir);
+            Client client = new Client(clientDir, username);
             response = client.downloadRequest(currentFileRemote);
 
             // Parsing the response

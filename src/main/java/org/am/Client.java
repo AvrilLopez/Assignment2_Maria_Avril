@@ -26,8 +26,11 @@ public class Client{
     public String SERVER_ADDRESS = "localhost";
     public int    SERVER_PORT = 16789;
 
-    public Client(File localDir) {
-        this.username = "user"; // future improvement
+    public Client(File localDir, String username) {
+        if (null == username){
+            username = "NewUser";
+        }
+        this.username = username;
         this.localDir = localDir;
         try {
             socket = new Socket(SERVER_ADDRESS, SERVER_PORT);

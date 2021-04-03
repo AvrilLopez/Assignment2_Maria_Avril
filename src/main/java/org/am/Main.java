@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
@@ -22,12 +24,21 @@ public class Main extends Application {
         Controller controller = loader.getController();
         Scene scene = new Scene(root);
 
+
+        TextInputDialog input = new TextInputDialog();
+        input.getDialogPane().setContentText("Enter your username: ");
+        input.showAndWait();
+        TextField textInput = input.getEditor();
+
+        String username = textInput.getText();
+
+
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setInitialDirectory(new File("./src/main/resources"));
         directoryChooser.setTitle("Select Local folder");
         File localDir = directoryChooser.showDialog(primaryStage);
 
-        controller.initialize(localDir);
+        controller.initialize(localDir, username);
 
         primaryStage.setTitle("File Server");
         primaryStage.setScene(scene);

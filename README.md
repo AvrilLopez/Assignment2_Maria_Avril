@@ -7,9 +7,10 @@
 | Mariya Anashkina           | 100746854  |
 | Avril Lopez van Domselaar  | 100746008  |
 
-When running the program, the user must select a local folder where they
-have the folder they want to upload to the server, or simply where they
-want to save the downloaded files.
+When running the program, the user must type a username and
+select a local folder where they have the files they want to 
+upload to the server, or simply where they want to store the 
+downloaded files.
 
 After that, the program sends a DIR request to the server and displays
 both the Server and local directory files. from there, the user can
