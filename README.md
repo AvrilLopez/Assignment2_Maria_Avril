@@ -34,6 +34,8 @@ And we used Gradle to organise the execution of files.
 For easy running, using any terminal, starting from the repository folder, run gradle startServer to dtart the Server.
 Then, from another terminal, navigate to the repository folder and run gradle run.
 
+The project was built with Java 11, so we recomment compiling with Java 11 or higher.
+
 ## Credit
 
 For some of the classes in the program, mostly Server.java and, some functions and code structure was taken from the modules 6 and 7 course examples, to be specific, from the ChatServer example.
