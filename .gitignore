@@ -37,3 +37,6 @@ gradle-app.setting
 
 # Cache of project
 .gradletasknamecache
+
+# Other
+META-INF
