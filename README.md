@@ -19,7 +19,7 @@ local and server files.
 
 ## Screenshot
 
-![Alt text]( "Screenshot")
+![Alt text](screenshot.png?raw=true "Screenshot")
 
 ## Framework used / built with
 
