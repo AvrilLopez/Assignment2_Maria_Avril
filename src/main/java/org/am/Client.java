@@ -27,7 +27,7 @@ public class Client{
     public int    SERVER_PORT = 16789;
 
     public Client(File localDir) {
-        this.username = "avril"; // change later
+        this.username = "user"; // future improvement
         this.localDir = localDir;
         try {
             socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
