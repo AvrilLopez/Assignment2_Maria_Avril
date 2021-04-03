@@ -13,9 +13,9 @@
             fx:controller="org.am.Controller"
             prefHeight="500.0" prefWidth="500.0" styleClass="bg">
 
-<!--    <stylesheets>-->
-<!--        <URL value="@stylesheet.css" />-->
-<!--    </stylesheets>-->
+    <stylesheets>
+        <URL value="@stylesheet.css" />
+    </stylesheets>
 
     <top>
         <HBox fx:id="MenuBar" minHeight="55">
@@ -46,7 +46,7 @@
     </left>
 
     <bottom>
-        <GridPane hgap="10" vgap="10" minHeight="205">
+        <GridPane hgap="10" vgap="10" minHeight="208">
             <TextArea fx:id="textArea" text="File Previews" wrapText="true" scrollTop="200" GridPane.columnIndex="1" GridPane.rowIndex="1" minWidth="490" maxHeight="200"/>
         </GridPane>
     </bottom>

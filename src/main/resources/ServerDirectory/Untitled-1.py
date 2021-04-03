@@ -27,4 +27,3 @@ for i in range(2, 101):
 for i in range(0,100):
      k,aprox,error,residual = iteration(1., float(a[i]), 100, 1e-13, 1e-14)
      print("a = " + str(a[i]) + " , iterations = " + str(k) +", approximation = " + str(aprox) + ", error = " + str(error) + ", residual = " + str(residual))
-
