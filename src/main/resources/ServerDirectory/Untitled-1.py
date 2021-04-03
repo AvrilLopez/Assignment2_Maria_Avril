@@ -1,3 +1,4 @@
+# This file was created and used for CSCI2072
 def iteration(x, a, k_max, epsX, epsY):
 
      y = map(x, a)                           

@@ -303,7 +303,14 @@ public class Controller {
         return content;
     }
 
-
+    /*
+     * previewRequest(ActionEvent actionEvent)
+     *
+     *
+     * This method sends a download request to the server, but instead of storing the
+     * file in the local directory, it displays it in the UI for the user to read.
+     *
+     */
     public void previewRequest(ActionEvent actionEvent) throws FileNotFoundException {
         textArea.clear();
         if (!local) {

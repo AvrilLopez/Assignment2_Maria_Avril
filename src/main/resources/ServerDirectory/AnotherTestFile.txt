@@ -1,0 +1,21 @@
+https://www.theodinproject.com/about
+
+About The Odin Project
+The Odin Project is one of those "What I wish I had when I was learning" resources. Not everyone has access to a computer science education or the funds to attend an intensive coding school and neither of those is right for everyone anyway. This project is designed to fill in the gap for people who are trying to hack it on their own but still want a high quality education.
+
+Our Beliefs
+book icon
+Education should be free and accessible
+This curriculum itself is free and we tried to link to resources that are themselves free so anyone in the world can use them.
+
+keyboard icon
+You learn best by actually building
+The Odin Project curriculum is full of projects that will help you build a strong portfolio of work on Github to fill out your resume.
+
+people icon
+Motivation is fueled by working with others
+We're committed to connecting students together so they can stay motivated and learn faster.
+
+open source icon
+Open source is best
+Our curriculum and website are available on Github and we encourage students to actually contribute to the project itself!

@@ -1,3 +1,5 @@
+# This file was used and created for CSCI2072
+
 import numpy as np
 from time import time
 import matplotlib
@@ -63,60 +65,3 @@ wtime_mul[1, 0]  = 4
 wtime_mul[1, 1]  = end_time - start_time
 
 print(wtime_mul[1, 1]/wtime_mulLow[1, 1])
-
-# A = np.array([[1.0, 0.0, 0.0, 0.0, 0.0], [7.0, 9.0, 0.0, 0.0, 0.0], [1.0, 3.0, 4.0, 0.0, 0.0], [1.0, 3.0, 4.0, 0.0, 0.0], [1.0, 3.0, 4.0, 0.0, 0.0]])
-# B = np.array([[2.0, 0.0, 0.0, 0.0, 0.0], [6.0, 9.0, 0.0, 0.0, 0.0], [8.0, 2.0, 9.0, 0.0, 0.0], [1.0, 3.0, 4.0, 0.0, 0.0], [1.0, 3.0, 4.0, 0.0, 0.0]])
-# start_time = time()
-# C = mulLow(A,B)
-# end_time = time() 
-
-# wtime_mulLow[2, 0]  = 5
-# wtime_mulLow[2, 1]  = end_time - start_time
-
-# start_time = time()
-# D = mul(A,B)
-# end_time = time()
-
-# wtime_mul[2, 0]  = 5
-# wtime_mul[2, 1]  = end_time - start_time
-
-# A = np.array([[1.0, 0.0, 0.0, 0.0, 0.0, 0.0], [7.0, 9.0, 0.0, 0.0, 0.0, 0.0], [1.0, 3.0, 4.0, 0.0, 0.0, 0.0], [1.0, 3.0, 4.0, 0.0, 0.0, 0.0], [7.0, 9.0, 0.0, 0.0, 0.0, 0.0], [7.0, 9.0, 0.0, 0.0, 0.0, 0.0]])
-# B = np.array([[2.0, 0.0, 0.0, 0.0, 0.0, 0.0], [6.0, 9.0, 0.0, 0.0, 0.0, 0.0], [8.0, 2.0, 9.0, 0.0, 0.0, 0.0], [8.0, 2.0, 9.0, 0.0, 0.0, 0.0], [7.0, 9.0, 0.0, 0.0, 0.0, 0.0], [7.0, 9.0, 0.0, 0.0, 0.0, 0.0]])
-# start_time = time()
-# C = mulLow(A,B)
-# end_time = time()
-
-# wtime_mulLow[3, 0]  = 6
-# wtime_mulLow[3, 1]  = end_time - start_time
-
-# start_time = time()
-# D = mul(A,B)
-# end_time = time()
-
-# wtime_mul[3, 0]  = 6
-# wtime_mul[3, 1]  = end_time - start_time
-
-# A = np.array([[1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [7.0, 9.0, 0.0, 0.0, 0.0, 0.0, 0.0], [1.0, 3.0, 4.0, 0.0, 0.0, 0.0, 0.0], [1.0, 3.0, 4.0, 0.0, 0.0, 0.0, 0.0], [1.0, 3.0, 4.0, 0.0, 0.0, 0.0, 0.0], [1.0, 3.0, 4.0, 0.0, 0.0, 0.0, 0.0], [1.0, 3.0, 4.0, 0.0, 0.0, 0.0, 0.0]])
-# B = np.array([[2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], [6.0, 9.0, 0.0, 0.0, 0.0, 0.0, 0.0], [8.0, 2.0, 9.0, 0.0, 0.0, 0.0, 0.0], [1.0, 3.0, 4.0, 0.0, 0.0, 0.0, 0.0], [1.0, 3.0, 4.0, 0.0, 0.0, 0.0, 0.0], [1.0, 3.0, 4.0, 0.0, 0.0, 0.0, 0.0], [1.0, 3.0, 4.0, 0.0, 0.0, 0.0, 0.0]])
-# start_time = time()
-# C = mulLow(A,B)
-# end_time = time()
-# print(C)
-
-# wtime_mulLow[4, 0]  = 7
-# wtime_mulLow[4, 1]  = end_time - start_time
-
-# start_time = time()
-# D = mul(A,B)
-# end_time = time()
-# print(D)
-
-# wtime_mul[4, 0]  = 7
-# wtime_mul[4, 1]  = end_time - start_time
-
-# print(wtime_mul[4, 1]/wtime_mulLow[4, 1])
-
-# plt.semilogy(wtime_mul[:, 0], wtime_mul[:, 1])
-# plt.semilogy(wtime_mulLow[:, 0], wtime_mulLow[:, 1])
-# plt.legend(["mul", "mulLow"])
-# plt.savefig("matplotlib1.png")

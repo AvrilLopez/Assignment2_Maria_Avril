@@ -24,7 +24,7 @@ public class Main extends Application {
         Controller controller = loader.getController();
         Scene scene = new Scene(root);
 
-
+        // Ask user to input a username
         TextInputDialog input = new TextInputDialog();
         input.getDialogPane().setContentText("Enter your username: ");
         input.showAndWait();
@@ -32,7 +32,11 @@ public class Main extends Application {
 
         String username = textInput.getText();
 
+        if (null == username){
+            username = "Guest";
+        }
 
+        // Ask user to choose local directory
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setInitialDirectory(new File("./src/main/resources"));
         directoryChooser.setTitle("Select Local folder");
