@@ -18,6 +18,8 @@ public class Controller {
     private TreeView treeViewRight;
     @FXML
     private TextArea textArea;
+    @FXML
+    private TextArea fileTextArea;
 
     public File clientDir;
 
@@ -139,7 +141,8 @@ public class Controller {
             dirRequest();
         }
 
-
+        fileTextArea.clear();
+        fileTextArea.appendText("Local: " + currentFile);
     }
 
     /*
@@ -164,6 +167,8 @@ public class Controller {
             dirRequest();
         }
 
+        fileTextArea.clear();
+        fileTextArea.appendText("Remote: " + currentFile);
     }
 
     /*
