@@ -23,7 +23,7 @@ public class Main extends Application {
         Scene scene = new Scene(root);
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setInitialDirectory(new File("../"));
+        directoryChooser.setInitialDirectory(new File("./src/main/resources"));
         directoryChooser.setTitle("Select Local folder");
         File localDir = directoryChooser.showDialog(primaryStage);
 

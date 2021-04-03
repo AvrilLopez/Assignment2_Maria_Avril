@@ -1,20 +1,23 @@
 package org.am;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.util.Scanner;
 
 public class Controller {
     @FXML
     private TreeView treeViewLeft;
     @FXML
     private TreeView treeViewRight;
+    @FXML
+    private TextArea textArea;
 
     public File clientDir;
 
@@ -41,7 +44,7 @@ public class Controller {
     }
 
     /*
-     * populateLeftTreeView()
+     * populateRightTreeView()
      *
      * This method populates the local directory view
      *
@@ -91,9 +94,9 @@ public class Controller {
                 treeViewLeft.setRoot(root);
             }
         } catch (IndexOutOfBoundsException e){
-            System.err.println("Error in populationg Left TreeView - Index out of Bounds");
+            System.err.println("Error in populating Left TreeView - Index out of Bounds");
         }catch (NullPointerException e){
-            System.err.println("Error in populationg Left TreeView - Null Pointer Exception");
+            System.err.println("Error in populating Left TreeView - Null Pointer Exception");
         }
     }
 
@@ -354,4 +357,44 @@ public class Controller {
     }
 
 
+    public void previewRequest(ActionEvent actionEvent) throws FileNotFoundException {
+        textArea.clear();
+        if (!local) {
+            //textArea.appendText("remote\n");
+            Client client = new Client(clientDir);
+            response = client.downloadRequest(currentFileRemote);
+
+            // Parsing the response
+            String[] responseContent = response.split("\r\n");
+            String[] file = responseContent[3].split("File: ");
+            String filename = file[1];
+
+            textArea.appendText("Preview of file: "+"./src/main/resources/ServerDirectory/" + filename+"\n");
+
+            String[] content = getContentFromResponse(responseContent);
+
+            for (String line: content){
+                if (line!=null) {
+                    textArea.appendText(line+"\n");
+                }
+
+            }
+        }
+        else {
+            //textArea.appendText("local\n");
+            String path = clientDir.getPath() + "\\" + currentFile;
+            textArea.appendText("Preview of file: "+"./src/main/resources/client-files/"+currentFile+"\n");
+
+            String currentLine;
+            Scanner scanner = new Scanner(currentFileLocal);
+            while (scanner.hasNext() && null != (currentLine = scanner.nextLine())) {
+                textArea.appendText(currentLine+"\n");
+
+            }
+            scanner.close();
+
+        }
+
+
+    }
 }

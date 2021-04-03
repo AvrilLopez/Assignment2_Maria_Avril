@@ -16,6 +16,8 @@
                 <Button text="DownLoad" onAction="#downloadRequest" GridPane.columnIndex="1" GridPane.rowIndex="1"></Button>
                 <Button text="Upload" onAction="#uploadRequest" GridPane.columnIndex="2" GridPane.rowIndex="1"></Button>
                 <Button text="Delete" onAction="#deleteRequest" GridPane.columnIndex="3" GridPane.rowIndex="1"></Button>
+                <Button text="Preview" onAction="#previewRequest" GridPane.columnIndex="4" GridPane.rowIndex="1"></Button>
+
             </GridPane>
         </HBox>
     </top>
@@ -37,6 +39,6 @@
     </left>
 
     <bottom>
-
+        <TextArea fx:id="textArea" text="hihi" wrapText="true" scrollTop="200"/>
     </bottom>
 </BorderPane>
