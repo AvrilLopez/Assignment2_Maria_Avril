@@ -1,0 +1,19 @@
+
+.text{
+    -fx-font-family: 'Verdana';
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.bg{
+    -fx-background-color: #D8D8EA;
+}
+
+.button{
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-background-color: linear-gradient(#857DB1, #5D5393);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 50, 0.0, 0, 1);
+}
+

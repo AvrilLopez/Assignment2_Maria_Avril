@@ -14,7 +14,7 @@ import java.util.Scanner;
 
 public class Client{
 
-
+    private Utils utils;
     private String username;
     private Socket socket = null;
     private BufferedReader in = null;
@@ -127,7 +127,7 @@ public class Client{
 
         // iterate through file and add each line to the request content
         try {
-            request += getFileContent(file);
+            request += utils.getFileContent(file);
         } catch (Exception e) {
             System.err.println("404 File for UPLOAD nor Found.");
         }
@@ -162,9 +162,6 @@ public class Client{
                 "Content:" + "\r\n" +
                 "-/-";
 
-        networkOut.println(request);
-        networkOut.flush();
-
         String response = null;
         // if the file to be deleted is remote
         if (!local) {
@@ -180,16 +177,11 @@ public class Client{
         } else { // if the file is local
             // we handle the deletion ourselves
             // no need to get the server involved
-            File deleteFile = null;
-            File[] files = localDir.listFiles();
-            for (File file: files){
-                if (file.getName().equals(filename)){
-                    deleteFile = file;
-                }
-            }
-            if(null != deleteFile) {
+            if (utils.isInDir(filename,localDir)){
+                File deleteFile = utils.getFromDir(filename,localDir);
                 deleteFile.delete();
                 response = "File Locally Deleted Successfully";
+                System.out.println(response);
             } else {
                 System.err.println("404 File for deletion not found");
             }
@@ -215,29 +207,7 @@ public class Client{
         return response;
     }
 
-    /*
-     * getFileContent(File file)
-     *
-     * @param file - File we want the content from
-     *
-     * This method returns the content of the file in a string
-     *
-     */
-    private String getFileContent(File file) throws IOException{
-        String content = "";
 
-        String currentLine;
-        Scanner scanner = new Scanner(file);
-        while (scanner.hasNext() && null != (currentLine = scanner.nextLine())) {
-            content += currentLine +"\r\n";
-
-        }
-
-
-        scanner.close();
-
-        return content;
-    }
 
     /*
      * getDir()

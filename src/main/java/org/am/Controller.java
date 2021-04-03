@@ -33,12 +33,15 @@ public class Controller {
 
     private String dirResponse;
 
+    private Utils utils;
+
     @FXML
     public void initialize(File localDir) {
 
         this.clientDir = localDir;
         this.currentFile = null;
         this.local = null;
+//        utils = new utils();
 
         dirRequest();
     }
@@ -212,14 +215,14 @@ public class Controller {
         String[] file = responseContent[3].split("File: ");
         String filename = file[1];
 
-        while (isInDir(filename,clientDir)){
+        while (utils.isInDir(filename,clientDir)){
             String[] temp1 = filename.split("\\.");
             filename = temp1[0] + "(" + 1 + ")." + temp1[1];
         }
 
         try {
             String[] content = getContentFromResponse(responseContent);
-            createFile(filename, content, clientDir);
+            utils.createFile(filename, content, clientDir);
 
         } catch (IOException e){
             System.err.println("Error copying the file into the local directory");
@@ -270,66 +273,6 @@ public class Controller {
         }
     }
 
-    /*
-     * isInDir(String filename, File directory)
-     *
-     * @param filename - Name of the file we are looking for
-     * @param directory - Directory we are looking in
-     *
-     * This method returns true is the file can be found in the specified directory
-     *
-     */
-    private boolean isInDir(String filename, File directory){
-        File[] files = directory.listFiles();
-        for (File file : files) {
-            if (file.getName().equals(filename)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /*
-     * getFromDir(String filename, File directory)
-     *
-     * @param filename - Name of the file we want
-     * @param directory - Directory we want it from
-     *
-     * This method returns the file from the specified directory
-     *
-     */
-    private File getFromDir(String filename, File directory){
-        File searchedFile = null;
-        File[] files = directory.listFiles();
-        for (File file : files) {
-            if (file.getName().equals(filename)) {
-                searchedFile = file;
-            }
-        }
-        return searchedFile;
-    }
-
-
-    /*
-     * createFile(String filename, String content, File directory)
-     *
-     * @param filename - Name of the file we want to create
-     * @param content - Content of the file we want to create
-     * @param directory - Place of the file we want to create
-     *
-     * This method creates a file in the directory specified with the content specified.
-     *
-     */
-    private void createFile(String filename, String[] content, File directory) throws IOException{
-        String path = directory.getPath() + "\\" + filename;
-        File newFile = new File(path);
-        newFile.createNewFile();
-        PrintWriter fileOutput = new PrintWriter(path);
-        for (String line: content){
-            fileOutput.println(line);
-        }
-        fileOutput.close();
-    }
 
     /*
      * getContentFromResponse(String response)
@@ -369,7 +312,7 @@ public class Controller {
             String[] file = responseContent[3].split("File: ");
             String filename = file[1];
 
-            textArea.appendText("Preview of file: "+"./src/main/resources/ServerDirectory/" + filename+"\n");
+            textArea.appendText("Preview of file: "+"./src/main/resources/ServerDirectory/" + filename+"\n\n");
 
             String[] content = getContentFromResponse(responseContent);
 
@@ -383,7 +326,7 @@ public class Controller {
         else {
             //textArea.appendText("local\n");
             String path = clientDir.getPath() + "\\" + currentFile;
-            textArea.appendText("Preview of file: "+"./src/main/resources/client-files/"+currentFile+"\n");
+            textArea.appendText("Preview of file: "+"./src/main/resources/client-files/"+currentFile+"\n\n");
 
             String currentLine;
             Scanner scanner = new Scanner(currentFileLocal);

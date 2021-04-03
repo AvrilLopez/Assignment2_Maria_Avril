@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Scanner;
 
 public class ClientConnectionHandler extends Thread{
+    private Utils utils;
     protected Socket clientSocket;
     protected PrintWriter responseOutput = null;
     protected BufferedReader requestInput = null;
@@ -166,13 +167,13 @@ public class ClientConnectionHandler extends Thread{
     private void sendUploadResponse(String filename, String request){
 
         try {
-            while (isInDir(filename,serverDirectory)){
+            while (utils.isInDir(filename,serverDirectory)){
                 String[] temp1 = filename.split("\\.");
                 filename = temp1[0] + "(" + 1 + ")." + temp1[1];
             }
 
             String[] content = getContentFromRequest(request);
-            createFile(filename,content,serverDirectory);
+            utils.createFile(filename,content,serverDirectory);
 
 
             String responseCode = "200 Ok: UPLOAD";
@@ -226,9 +227,9 @@ public class ClientConnectionHandler extends Thread{
     private void sendDownloadResponse(String filename){
         String responseCode = "200 Ok: DOWNLOAD";
 
-        if (isInDir(filename,serverDirectory)){
+        if (utils.isInDir(filename,serverDirectory)){
 
-            File downloadFile = getFromDir(filename,serverDirectory);
+            File downloadFile = utils.getFromDir(filename,serverDirectory);
 
             try {
                 String[] contentAndLines = getFileContent(downloadFile).split("-/-");
@@ -287,8 +288,8 @@ public class ClientConnectionHandler extends Thread{
     private void sendDeleteResponse(String filename){
         String responseCode = "200 Ok: DELETE";
 
-        if (isInDir(filename, serverDirectory)){
-            File deleteFile = getFromDir(filename, serverDirectory);
+        if (utils.isInDir(filename, serverDirectory)){
+            File deleteFile = utils.getFromDir(filename, serverDirectory);
             deleteFile.delete();
             try {
                 sendResponse(responseCode, filename, "-/-", "0");
@@ -322,47 +323,6 @@ public class ClientConnectionHandler extends Thread{
         responseOutput.print("\r\nConnection: Close\r\n\r\n");
         responseOutput.flush();
 
-    }
-
-
-    /*
-     * isInDir(String filename, File directory)
-     *
-     * @param filename - Name of the file we are looking for
-     * @param directory - Directory we are looking in
-     *
-     * This method returns true is the file can be found in the specified directory
-     *
-     */
-    private boolean isInDir(String filename, File directory){
-        File[] files = directory.listFiles();
-        for (File file : files) {
-            if (file.getName().equals(filename)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
-    /*
-     * getFromDir(String filename, File directory)
-     *
-     * @param filename - Name of the file we want
-     * @param directory - Directory we want it from
-     *
-     * This method returns the file from the specified directory
-     *
-     */
-    private File getFromDir(String filename, File directory){
-        File searchedFile = null;
-        File[] files = directory.listFiles();
-        for (File file : files) {
-            if (file.getName().equals(filename)) {
-                searchedFile = file;
-            }
-        }
-        return searchedFile;
     }
 
 
@@ -407,27 +367,6 @@ public class ClientConnectionHandler extends Thread{
             request += "\r\n" + line;
         }
         return request;
-    }
-
-    /*
-     * createFile(String filename, String content, File directory)
-     *
-     * @param filename - Name of the file we want to create
-     * @param content - Content of the file we want to create
-     * @param directory - Place of the file we want to create
-     *
-     * This method creates a file in the directory specified with the content specified.
-     *
-     */
-    private void createFile(String filename, String[] content, File directory) throws IOException{
-        String path = directory.getPath() + "\\" + filename;
-        File newFile = new File(path);
-        newFile.createNewFile();
-        PrintWriter fileOutput = new PrintWriter(path);
-        for (String line: content){
-            fileOutput.println(line);
-        }
-        fileOutput.close();
     }
 
     /*

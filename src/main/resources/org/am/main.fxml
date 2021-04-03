@@ -6,10 +6,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import java.net.URL?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.am.Controller"
-            prefHeight="500.0" prefWidth="500.0">
+            prefHeight="500.0" prefWidth="500.0" styleClass="bg">
+
+    <stylesheets>
+        <URL value="@stylesheet.css" />
+    </stylesheets>
+
     <top>
         <HBox fx:id="MenuBar" minHeight="45">
             <GridPane hgap="10" vgap="10">
@@ -39,6 +45,8 @@
     </left>
 
     <bottom>
-        <TextArea fx:id="textArea" text="hihi" wrapText="true" scrollTop="200"/>
+        <GridPane hgap="10" vgap="10">
+            <TextArea fx:id="textArea" text="File Previews" wrapText="true" scrollTop="200" GridPane.columnIndex="1" GridPane.rowIndex="1" minWidth="490"/>
+        </GridPane>
     </bottom>
 </BorderPane>
