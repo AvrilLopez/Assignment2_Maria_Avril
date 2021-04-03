@@ -36,6 +36,10 @@ Then, from another terminal, navigate to the repository folder and run gradle ru
 
 The project was built with Java 11, so we recomment compiling with Java 11 or higher.
 
+If the problem arises(UnsupportedClassVersionError) when previewing the file from the Server directory, make sure to change
+the Project SDK to Java12. To do so, navigate to Project structure->Project settings->Project->Project SDK.
+
+
 ## Credit
 
 For some of the classes in the program, mostly Server.java and, some functions and code structure was taken from the modules 6 and 7 course examples, to be specific, from the ChatServer example.
